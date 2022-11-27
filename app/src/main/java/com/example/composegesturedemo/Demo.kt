@@ -3,7 +3,10 @@ package com.example.composegesturedemo
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.ConsumedData
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -103,3 +107,33 @@ fun Demo2() {
         }
     }
 }
+
+/**
+ * 可滚动修饰符
+ * scrollable修饰符与滚动修饰符区别在于scrollable可检测滚动手势但不会偏移其内容。
+ * 需要ScrollableController才能正常运行。构造ScrollableController时，必须提供一个
+ * consumeScrollDelta函数，该函数将在每个滚动步骤(通过手势输入、平滑滚动或滑动)调用，
+ * 并且增量以像素为单位。为了确保正确传播事件，必须从此函数返回使用的滚动距离量。
+ */
+@Composable
+fun Demo3() {
+    var offset by remember {
+        mutableStateOf(0f)
+    }
+    Box(
+        modifier = Modifier
+            .size(150.dp)
+            .scrollable(
+                orientation = Orientation.Vertical,
+                state = rememberScrollableState { delta ->
+                    offset += delta
+                    delta
+                }
+            )
+            .background(Color.LightGray),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = offset.toString())
+    }
+}
+
