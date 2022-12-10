@@ -1,19 +1,17 @@
 package com.example.composegesturedemo
 
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.ConsumedData
 import androidx.compose.ui.input.pointer.pointerInput
@@ -137,3 +135,39 @@ fun Demo3() {
     }
 }
 
+/**
+ * 嵌套滚动
+ * Compose有自动处理嵌套滚动，先滚动子view，再滚动父view
+ */
+@Composable
+fun Demo4() {
+    val gradient = Brush.verticalGradient(
+        0f to Color.Gray,
+        1000f to Color.White
+    )
+    Box(
+        modifier = Modifier
+            .background(Color.LightGray)
+            .verticalScroll(rememberScrollState())
+            .padding(32.dp)
+    ) {
+        Column {
+            repeat(8) {
+                Box(
+                    modifier = Modifier
+                        .height(128.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        text = "Scroll here",
+                        modifier = Modifier
+                            .border(12.dp, Color.DarkGray)
+                            .background(brush = gradient)
+                            .padding(24.dp)
+                            .height(150.dp)
+                    )
+                }
+            }
+        }
+    }
+}

@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeGestureDemoTheme {
-                Demo3()
+                Demo4()
             }
         }
     }
@@ -27,6 +27,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ComposeGestureDemoTheme {
-        Demo3()
+        Demo4()
     }
 }
