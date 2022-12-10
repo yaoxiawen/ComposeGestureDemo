@@ -2,10 +2,7 @@ package com.example.composegesturedemo
 
 import android.util.Log
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -16,8 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.ConsumedData
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 /**
  * 点击手势
@@ -169,5 +168,51 @@ fun Demo4() {
                 }
             }
         }
+    }
+}
+
+/**
+ * 拖动
+ * draggable修饰符和rememberDraggableState
+ * 类似scrollable修饰符和rememberScrollableState
+ * 但是只能指定一个方向，水平或者竖直
+ */
+@Composable
+fun Demo5() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        var offsetX by remember { mutableStateOf(0f) }
+        Text(text = "Drag me", modifier = Modifier
+            .offset { IntOffset(offsetX.roundToInt(), 0) }
+            .draggable(
+                orientation = Orientation.Horizontal, state = rememberDraggableState { delta ->
+                    offsetX += delta
+                }
+            ))
+    }
+}
+
+/**
+ * 拖动2
+ * 如果需要控制整个拖动手势，考虑改为pointerInput修饰符使用拖动手势检测器
+ */
+@Composable
+fun Demo6() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        var offsetX by remember { mutableStateOf(0f) }
+        var offsetY by remember { mutableStateOf(0f) }
+        Box(modifier = Modifier
+            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+            .background(Color.Blue)
+            .size(50.dp)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    offsetX += dragAmount.x
+                    offsetY += dragAmount.y
+                }
+            })
     }
 }
