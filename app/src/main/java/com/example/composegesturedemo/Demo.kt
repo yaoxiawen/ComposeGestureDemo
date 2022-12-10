@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.ConsumedData
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -214,5 +215,38 @@ fun Demo6() {
                     offsetY += dragAmount.y
                 }
             })
+    }
+}
+
+/**
+ * 滑动
+ * swipeable
+ */
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun Demo7() {
+    val width = 96.dp
+    val squareWidth = 48.dp
+    val swipeableState = rememberSwipeableState(initialValue = 0)
+    val sizePx = with(LocalDensity.current) { squareWidth.toPx() }
+    val anchors = mapOf(0f to 0, sizePx to 1)
+    Box(
+        modifier = Modifier
+            .padding(20.dp)
+            .width(width)
+            .swipeable(
+                state = swipeableState,
+                anchors = anchors,
+                thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                orientation = Orientation.Horizontal
+            )
+            .background(Color.LightGray)
+    ) {
+        Box(
+            modifier = Modifier
+                .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
+                .size(squareWidth)
+                .background(Color.DarkGray)
+        )
     }
 }
